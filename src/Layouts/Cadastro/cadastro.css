@@ -1,0 +1,38 @@
+body{
+    background-color: #f1a7a9;
+}
+/*941b0c*/
+
+#formCadastro{ 
+    text-align: center;
+    padding: 50px;
+    width: 50%;
+    background-color: #941b0c;
+    margin: auto;
+    margin-top: 70px;
+}
+/*d10000*/
+
+.campo{
+    width: 41%;
+    border-radius: 10px; /* Ajuste o valor conforme o arredondamento desejado */
+    padding: 10px;
+    border: 1.9px solid #941b0c;
+    background-color: #ffb6ac;
+}
+
+.campoEndereco{
+    border-radius: 10px; /* Ajuste o valor conforme o arredondamento desejado */
+    padding: 10px;
+    width: 90%;
+    border: 1.9px solid #941b0c;
+    background-color: #ffb6ac;
+}
+
+.campo::placeholder{
+    color: darkslategray;
+}
+
+#nomeHemocentro, #cidade, #telefone, #diasColeta{
+    margin-right: 20px;
+}
