@@ -1,38 +1,134 @@
-body{
-    background-color: #f1a7a9;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
 }
-/*941b0c*/
 
-#formCadastro{ 
-    text-align: center;
-    padding: 50px;
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f7f7f7;
+}
+
+.container {
+    background-color: #ffffff;
     width: 50%;
-    background-color: #941b0c;
-    margin: auto;
-    margin-top: 70px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-/*d10000*/
 
-.campo{
-    width: 41%;
-    border-radius: 10px; /* Ajuste o valor conforme o arredondamento desejado */
+.title {
+    font-size: 24px;
+    color: #B12B2B;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.campo, .campoEndereco {
+    width: 100%;
     padding: 10px;
-    border: 1.9px solid #941b0c;
-    background-color: #ffb6ac;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease;
 }
 
-.campoEndereco{
-    border-radius: 10px; /* Ajuste o valor conforme o arredondamento desejado */
+.linha1 {
+    display: flex;
+    gap: 10px;
+}
+
+.campo {
+    flex: 1;
+}
+
+.campoEndereco {
+    width: 100%;
+}
+
+.campo:focus, .campoEndereco:focus {
+    border-color: #B12B2B;
+    outline: none;
+    box-shadow: 0 0 5px rgba(177, 43, 43, 0.4);
+}
+
+.btn {
+    width: 48%;
     padding: 10px;
-    width: 90%;
-    border: 1.9px solid #941b0c;
-    background-color: #ffb6ac;
+    margin-top: 20px;
+    background-color: #B12B2B;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.campo::placeholder{
-    color: darkslategray;
+#divBtn {
+    display: flex;
+    justify-content: space-between;
 }
 
-#nomeHemocentro, #cidade, #telefone, #diasColeta{
-    margin-right: 20px;
+.btn:hover {
+    background-color: #A12222;
+}
+
+/* Efeito de hover nos botões */
+.btn:active {
+    transform: scale(0.98);
+}
+
+
+/* Estilos adicionais para os campos de Dias e Horários */
+.dias-coleta, .horario-coleta {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.dias-coleta label, .horario-coleta label {
+    display: block;
+    font-weight: bold;
+    color: #B12B2B;
+    margin-bottom: 5px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+
+.horario-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.campo-horario {
+    width: calc(50% - 5px);
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.campo-horario:focus {
+    border-color: #B12B2B;
+    outline: none;
+    box-shadow: 0 0 5px rgba(177, 43, 43, 0.4);
 }

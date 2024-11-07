@@ -7,31 +7,53 @@
   <link rel="stylesheet" type="text/css" href="cadastro.css">
 </head>
 <body>
-    <div class="tituloForm">Cadastro</div>
-    <div id="formCadastro">
-        <div id="primeira" class="linha1">
-            <input type="text" id="nomeHemocentro" class="campo" placeholder="Nome do hemocentro">
-            <input type="text" id="cnpj" class="campo" placeholder="CNPJ">
-        </div><br>
-        <div id="segunda" class="linha2">
-            <input type="text" id="endereco" class="campoEndereco" placeholder="Endereço">
-        </div><br>
-        <div id="terceira" class="linha1">
-            <input type="text" id="cidade" class="campo" placeholder="Cidade">
-            <input type="text" id="estado" class="campo" placeholder="Estado">
-        </div><br>
-        <div id="quarta" class="linha1">
-            <input type="text" id="telefone" class="campo" placeholder="Telefone para contato">
-            <input type="text" id="emailRep" class="campo" placeholder=" Email do representante">        
-        </div><br>
-        <div id="quinta" class="linha1">
-            <input type="text" id="diasColeta" class="campo" placeholder="Dias de coleta">
-            <input type="text" id="horarioColeta" class="campo" placeholder="Horários de coleta">
+    <div class="container">
+        <div id="formCadastro">
+            <div class="title">Cadastro</div>
+            <div id="primeira" class="linha1">
+                <input type="text" id="nomeHemocentro" class="campo" placeholder="Nome do hemocentro">
+                <input type="text" id="cnpj" class="campo" placeholder="CNPJ">
+            </div>
+            <div id="segunda" class="linha2">
+                <input type="text" id="endereco" class="campoEndereco" placeholder="Endereço">
+            </div>
+            <div id="terceira" class="linha1">
+                <input type="text" id="cidade" class="campo" placeholder="Cidade">
+                <input type="text" id="estado" class="campo" placeholder="Estado">
+            </div>
+            <div id="quarta" class="linha1">
+                <input type="text" id="telefone" class="campo" placeholder="Telefone para contato">
+                <input type="text" id="emailRep" class="campo" placeholder="Email do representante">        
+            </div>
+            <!--<div id="quinta" class="linha1">
+                <input type="text" id="diasColeta" class="campo" placeholder="Dias de coleta">
+                <input type="text" id="horarioColeta" class="campo" placeholder="Horários de coleta">
+            </div>-->
+            <div class="dias-coleta">
+                <label>Dias de coleta:</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="diasColeta" value="Segunda"> Segunda</label>
+                    <label><input type="checkbox" name="diasColeta" value="Terça"> Terça</label>
+                    <label><input type="checkbox" name="diasColeta" value="Quarta"> Quarta</label>
+                    <label><input type="checkbox" name="diasColeta" value="Quinta"> Quinta</label>
+                    <label><input type="checkbox" name="diasColeta" value="Sexta"> Sexta</label>
+                    <label><input type="checkbox" name="diasColeta" value="Sábado"> Sábado</label>
+                    <label><input type="checkbox" name="diasColeta" value="Domingo"> Domingo</label>
+                </div>
+            </div>
+            <div class="horario-coleta">
+                <label>Horários de coleta:</label>
+                <div class="horario-group">
+                    <input type="time" id="horarioInicio" name="horarioInicio" class="campo-horario" placeholder="Início">
+                    <span>às</span>
+                    <input type="time" id="horarioFim" name="horarioFim" class="campo-horario" placeholder="Fim">
+                </div>
+            </div>
+            <div id="divBtn">
+                <input type="button" id="btnLimpar" class="btn" value="Limpar">
+                <input type="button" id="btnCadastrar" class="btn" value="Cadastrar">
+            </div>
         </div>
-
-
-
-
     </div>
 </body>
 </html>
