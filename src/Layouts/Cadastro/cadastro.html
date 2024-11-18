@@ -11,24 +11,24 @@
         <div id="formCadastro">
             <div class="title">Cadastro</div>
             <div id="primeira" class="linha1">
-                <input type="text" id="nomeHemocentro" class="campo" placeholder="Nome do hemocentro">
-                <input type="text" id="cnpj" class="campo" placeholder="CNPJ">
+                <input type="text" id="nomeHemocentro" class="campo" placeholder="Nome do hemocentro" oninput="" required>
+                <input type="text" id="cnpj" class="campo" placeholder="CNPJ" oninput="validarCNPJ(this)" required>
             </div>
             <div id="segunda" class="linha2">
-                <input type="text" id="endereco" class="campoEndereco" placeholder="Endereço">
+                <input type="text" id="endereco" class="campoEndereco" placeholder="Endereço" required>
             </div>
             <div id="terceira" class="linha1">
-                <input type="text" id="cidade" class="campo" placeholder="Cidade">
-                <input type="text" id="estado" class="campo" placeholder="Estado">
+                <input type="text" id="cidade" class="campo" placeholder="Cidade" oninput="validarTexto()" required>
+                <input type="text" id="estado" class="campo" placeholder="Estado" oninput="validarTexto()" required>
             </div>
             <div id="quarta" class="linha1">
-                <input type="text" id="telefone" class="campo" placeholder="Telefone para contato">
-                <input type="text" id="emailRep" class="campo" placeholder="Email do representante">        
+                <input type="text" id="telefone" class="campo" placeholder="Telefone para contato" oninput="validarTelefone(this)" required>
+                <input type="text" id="emailRep" class="campo" placeholder="Email do representante" required>        
             </div>
-            <!--<div id="quinta" class="linha1">
-                <input type="text" id="diasColeta" class="campo" placeholder="Dias de coleta">
-                <input type="text" id="horarioColeta" class="campo" placeholder="Horários de coleta">
-            </div>-->
+            <div class="linha1">
+                <input type="password" id="senha" class="campo" placeholder="Senha" oninput="validarTexto()" required>
+            </div>
+            <br>
             <div class="dias-coleta">
                 <label>Dias de coleta:</label>
                 <div class="checkbox-group">
@@ -41,19 +41,22 @@
                     <label><input type="checkbox" name="diasColeta" value="Domingo"> Domingo</label>
                 </div>
             </div>
+            <br>
             <div class="horario-coleta">
                 <label>Horários de coleta:</label>
                 <div class="horario-group">
-                    <input type="time" id="horarioInicio" name="horarioInicio" class="campo-horario" placeholder="Início">
+                    <input type="time" id="horarioInicio" name="horarioInicio" class="campo-horario" placeholder="Início" required>
                     <span>às</span>
-                    <input type="time" id="horarioFim" name="horarioFim" class="campo-horario" placeholder="Fim">
+                    <input type="time" id="horarioFim" name="horarioFim" class="campo-horario" placeholder="Fim" required>
                 </div>
             </div>
+            <br>
             <div id="divBtn">
-                <input type="button" id="btnLimpar" class="btn" value="Limpar">
-                <input type="button" id="btnCadastrar" class="btn" value="Cadastrar">
+                <input type="button" id="btnLimpar" class="btn" value="Limpar" onclick="limparCampos()">
+                <input type="button" id="btnCadastrar" class="btn" value="Cadastrar" onclick="cadastrarHemocentro()">
             </div>
         </div>
     </div>
+<script src="cadastro.js"></script>
 </body>
 </html>
