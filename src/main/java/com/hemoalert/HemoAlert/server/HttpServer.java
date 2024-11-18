@@ -1,92 +1,108 @@
 package com.hemoalert.HemoAlert.server;
 
-import com.hemoalert.HemoAlert.model.Alert;
+import com.hemoalert.HemoAlert.controller.AlertController;
+import com.hemoalert.HemoAlert.controller.BloodCenterController;
+import com.hemoalert.HemoAlert.service.AlertService;
+import com.hemoalert.HemoAlert.service.BloodCenterService;
+import com.hemoalert.HemoAlert.repository.AlertRepository;
+import com.hemoalert.HemoAlert.repository.BloodCenterRepository;
 
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class HttpServer {
     private final int port;
+    private final AlertController alertController;
+    private final BloodCenterController bloodCenterController;
 
-    public HttpServer(final int port) {
+    public HttpServer(final int port, AlertController alertController, BloodCenterController bloodCenterController) {
         this.port = port;
+        this.alertController = alertController;
+        this.bloodCenterController = bloodCenterController;
     }
 
-    public void start(){
-        try (Connection connection = connectToDatabase()){
-            if (connection != null) {
-                System.out.println("Connected to the database!");
-            } else {
-                System.out.println("Failed to make connection!");
-                return;
-            }
-
+    public void start() {
+        try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server started on port: " + port);
 
-            Socket clientSocket = serverSocket.accept();
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                new Thread(() -> handleRequest(clientSocket)).start();
+            }
 
-            ObjectInputStream receptor = new ObjectInputStream(clientSocket.getInputStream());
-
-            Object obj = null;
-            do{
-                obj = receptor.readObject();
-                Alert alert = (Alert) obj;
-                System.out.println("Received Alert: " + alert.toString());
-
-                insertAlert(connection, alert);
-            } while (!(obj instanceof String) || !((String)obj).toUpperCase().equals("FIM"));
-
-            receptor.close();
-            clientSocket.close();
-            serverSocket.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Server exception: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private Connection connectToDatabase() {
-        String dbUrl = "jdbc:postgresql://localhost:5432/hemoalert";
-        String dbUser = "postgres";
-        String dbPassword = "jp280104";
+    private void handleRequest(Socket clientSocket) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
 
-        try {
-            return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-        } catch (Exception e) {
-            System.out.println("Database connection exception: " + e.getMessage());
+            String requestLine = reader.readLine();
+            if (requestLine == null) return;
+
+            String[] requestParts = requestLine.split(" ");
+            String method = requestParts[0];
+            String path = requestParts[1];
+
+            if (method.equals("POST") && path.equals("/alerts")) {
+                alertController.handleRequest(clientSocket);
+            } else if (method.equals("GET") && path.startsWith("/alerts/")) {
+                alertController.handleRequest(clientSocket);
+            } else if (method.equals("GET") && path.startsWith("/bloodcenters/")) {
+                bloodCenterController.handleRequest(clientSocket);
+            } else {
+                sendResponse(writer, 404, "Not Found");
+            }
+
+        } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
-    private void insertAlert(Connection connection, Alert alert) throws Exception {
-        String insertSql = "INSERT INTO alerta (id, ddd, tipo_sanguineo, hemocentro_id) VALUES (?, ?, ?, ?)";
+    private void sendResponse(BufferedWriter writer, int statusCode, String body) throws IOException {
+        writer.write("HTTP/1.1 " + statusCode + " OK\r\n");
+        writer.write("Content-Type: application/json\r\n");
+        writer.write("Content-Length: " + body.length() + "\r\n");
+        writer.write("\r\n");
+        writer.write(body);
+        writer.flush();
+    }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertSql)) {
-            preparedStatement.setObject(1, alert.getId());
-            preparedStatement.setString(2, alert.getCity());
-            preparedStatement.setString(3, alert.getBloodType().getDisplayName());
-            preparedStatement.setObject(4, alert.getCenterUuid());
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Alert inserted successfully! Rows affected: " + rowsAffected);
-            } else {
-                System.out.println("Failed to insert alert.");
-            }
-        } catch (Exception e) {
-            System.out.println("Database insert exception: " + e.getMessage());
-            e.printStackTrace();
-        }
+    private static Connection connectToDatabase() throws SQLException {
+        String dbUrl = "jdbc:postgresql://localhost:5432/hemoalert";
+        String dbUser = "postgres";
+        String dbPassword = "your_password";
+        return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
     public static void main(String[] args) {
-        HttpServer server = new HttpServer(8080);
-        server.start();
+        try {
+            Connection connection = connectToDatabase();
+
+            AlertRepository alertRepository = new AlertRepository(connection);
+            BloodCenterRepository bloodCenterRepository = new BloodCenterRepository(connection);
+
+            AlertService alertService = new AlertService(alertRepository);
+            BloodCenterService bloodCenterService = new BloodCenterService(bloodCenterRepository);
+
+            // Crie os controladores, passando os serviços
+            AlertController alertController = new AlertController(alertService);
+            BloodCenterController bloodCenterController = new BloodCenterController(bloodCenterService);
+
+            // Inicie o servidor HTTP
+            HttpServer server = new HttpServer(8080, alertController, bloodCenterController);
+            server.start();
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
