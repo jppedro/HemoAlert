@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emitir Alerta</title>
+    <link rel="stylesheet" href="alerta.css">
+    <script src="alerta.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="alert-box">
+            <h1>Emitir alerta</h1>
+            <label for="tipos-sangue">Tipos sanguíneos com maior urgência:</label>
+            <input type="text" id="tipos-sangue" placeholder="Digite os tipos sanguíneos...">
+
+            <label for="mensagem">Personalize a mensagem se desejar:</label>
+            <textarea id="mensagem" placeholder="Alerta de escassez de sangue no HEMOCENTRO X. Acesse o formulário para fazer sua doação e contribuição: [LINK]"></textarea>
+
+            <button id="confirmar-envio" class="button">
+                Confirmar envio de SMS
+            </button>
+            <a href="/Login/index.html" class="button">Voltar</a>
+        </div>
+    </div>
+</body>
+</html>
