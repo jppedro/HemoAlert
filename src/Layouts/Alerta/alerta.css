@@ -77,3 +77,15 @@ textarea {
 .button:hover {
     background-color: #A12222;
 }
+
+.checkbox-group {
+    display: flex; /* Layout flexível em linha */
+    flex-wrap: wrap; /* Permite quebra de linha, se necessário */
+    gap: 15px; /* Espaçamento entre os checkboxes */
+  }
+  
+  .checkbox-group label {
+    display: flex;
+    align-items: center; /* Alinha checkbox e texto verticalmente */
+    margin: 10px 0; /* Espaçamento vertical */
+  }

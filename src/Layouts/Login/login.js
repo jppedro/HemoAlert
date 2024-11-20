@@ -21,11 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   
       alert('Login realizado com sucesso!');
-      window.location.href = 'alerta.html';
+      window.location.href = '../Alerta/alerta.html';
     });
   
     registerLink.addEventListener('click', (event) => {
       event.preventDefault(); 
+      window.location.href = '../Cadastro/cadastro.html';
     });
   });
   
