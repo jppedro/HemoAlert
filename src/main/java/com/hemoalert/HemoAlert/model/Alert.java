@@ -1,5 +1,7 @@
 package com.hemoalert.HemoAlert.model;
 
+import com.hemoalert.HemoAlert.dto.AlertDTO;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -21,15 +23,22 @@ public class Alert implements Serializable {
         this.centerUuid = centerUuid;
     }
 
-    /*public static Alert of(AlertDTO alertDTO) {
+    public Alert(final UUID alertUuid, final String city, final BloodType bloodType, final UUID centerUuid) {
+        this.alertUuid = alertUuid;
+        this.city = city;
+        this.bloodType = bloodType;
+        this.centerUuid = centerUuid;
+    }
+
+    public static Alert of(AlertDTO alertDTO) {
         return new Alert(
-                alertDTO.getAlertUUID(),
+                alertDTO.getAlertUuid(),
                 alertDTO.getCenterName(),
                 alertDTO.getCity(),
                 alertDTO.getBloodType(),
-                alertDTO.getCenterUUID()
+                alertDTO.getCenterUuid()
         );
-    }*/
+    }
 
     public UUID getId() {
         return alertUuid;
@@ -71,7 +80,6 @@ public class Alert implements Serializable {
     public String toString() {
         return "Alert{" +
                 "alertUuid=" + alertUuid +
-                ", centerName='" + centerName + '\'' +
                 ", city='" + city + '\'' +
                 ", bloodType=" + bloodType +
                 ", centerUuid=" + centerUuid +
