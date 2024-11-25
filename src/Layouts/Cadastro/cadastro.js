@@ -12,23 +12,56 @@ function limparCampos(){
 }
 
 function cadastrarHemocentro(){
-    var numeroCNPJ = document.getElementById("cnpj");
-    var numeroTelefone = document.getElementById("telefone");
+    var nome = document.getElementById("nomeHemocentro").value;
+    var numeroCNPJ = document.getElementById("cnpj").value;
+    var rua = document.getElementById("rua").value;
+    var numero = document.getElementById("numero").value;
+    var bairro = document.getElementById("bairro").value;
+    var cep = document.getElementById("cep").value;
+    var cidade = document.getElementById("cidade").value;
+    var estado = document.getElementById("estado").value;
+    var numeroTelefone = document.getElementById("telefone").value;
+    var email = document.getElementById("emailRep").value;
+    var senha = document.getElementById("senha").value;
 
-    if(numeroCNPJ.value.length != 18)
-    {
-        alert("CNPJ inválido.");
-    }
-    if(numeroTelefone.value.length != 15)
-    {
-        alert("Telefone inválido.");
-    }
     validarSenha();
     if(preencherTodosOsCampos() == true)
     {
-        //chamar rota de cadastro aqui
-        alert('Cadastro realizado com sucesso!');
-        limparCampos();
+        var hemocentroData = {
+            nome: nome,
+            cnpj: numeroCNPJ,
+            rua: rua,
+            numero: numero,
+            bairro: bairro,
+            cep: cep,
+            cidade: cidade,
+            estado: estado,
+            telefone: numeroTelefone,
+            email: email,
+            senha: senha // Só inclua senha se for realmente necessário para o backend
+        };
+
+        fetch("http://localhost:8080/blood-centers", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(hemocentroData)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Cadastro realizado com sucesso!");
+                limparCampos();
+            } else {
+                response.json().then(err => {
+                    alert("Erro ao cadastrar hemocentro: " + err.message);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Erro na requisição:", error);
+            alert("Erro ao conectar com o servidor.");
+        });
     }
 } 
 
@@ -44,6 +77,28 @@ function validarCNPJ(campoCNPJ) {
         .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3") 
         .replace(/\.(\d{3})(\d)/, ".$1/$2")    
         .replace(/(\d{4})(\d)/, "$1-$2");
+}
+
+function validarCEP(campoCEP) {
+    var numeroCEP = campoCEP.value.replace(/\D/g, "");
+
+   if (numeroCEP.length > 8) {
+    numeroCEP = numeroCEP.slice(0, 8);
+    }
+
+    campoCEP.value = numeroCEP.replace(/(\d{5})(\d)/, "$1-$2");
+}
+
+function validarNumero(campoNumero) {
+    var numero = campoNumero.value.replace(/\D/g, "");
+
+    if (numero.length > 5) {
+        numero = numero.slice(0, 14);
+    }
+
+    campoNumero.value = numero
+        .replace(/\D/g, "")
+        .substring(0, 5);
 }
 
 function validarTelefone(campoTelefone) {

@@ -14,21 +14,25 @@
                 <input type="text" id="nomeHemocentro" class="campo" placeholder="Nome do hemocentro" oninput="" required>
                 <input type="text" id="cnpj" class="campo" placeholder="CNPJ" oninput="validarCNPJ(this)" required>
             </div>
-            <div id="segunda" class="linha2">
-                <input type="text" id="endereco" class="campoEndereco" placeholder="Endereço" required>
+            <div id="segunda" class="linha1">
+                <input type="text" id="rua" class="campo" placeholder="Rua" required>
+                <input type="number" id="numero" class="campo" placeholder="Número" oninput="validarNumero(this)" required>
             </div>
             <div id="terceira" class="linha1">
+                <input type="text" id="bairro" class="campo" placeholder="Bairro" required>
+                <input type="text" id="cep" class="campo" placeholder="Cep" oninput="validarCEP(this)" required>
+            </div>
+            <div id="quarta" class="linha1">
                 <input type="text" id="cidade" class="campo" placeholder="Cidade" oninput="validarTexto()" required>
                 <input type="text" id="estado" class="campo" placeholder="Estado" oninput="validarTexto()" required>
             </div>
-            <div id="quarta" class="linha1">
+            <div id="quinta" class="linha1">
                 <input type="text" id="telefone" class="campo" placeholder="Telefone para contato" oninput="validarTelefone(this)" required>
                 <input type="text" id="emailRep" class="campo" placeholder="Email do representante" required>        
             </div>
             <div class="linha1">
                 <input type="password" id="senha" class="campo" placeholder="Senha" oninput="validarTexto()" required>
             </div>
-            <br>
             <div class="dias-coleta">
                 <label>Dias de coleta:</label>
                 <div class="checkbox-group">
@@ -41,7 +45,6 @@
                     <label><input type="checkbox" name="diasColeta" value="Domingo"> Domingo</label>
                 </div>
             </div>
-            <br>
             <div class="horario-coleta">
                 <label>Horários de coleta:</label>
                 <div class="horario-group">
