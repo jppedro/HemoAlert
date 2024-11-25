@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emitir Alerta</title>
+    <link rel="stylesheet" href="alerta.css">
+    <script src="alerta.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="alert-box">
+            <h1>Emitir alerta</h1>
+            <label for="tipos-sangue">Tipos sanguíneos com maior urgência:</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="tiposSanguineos" value="A+"> A+</label>
+              <label><input type="checkbox" name="tiposSanguineos" value="A-"> A-</label>
+              <label><input type="checkbox" name="tiposSanguineos" value="B+"> B+</label>
+              <label><input type="checkbox" name="tiposSanguineos" value="B-"> B-</label>
+              <label><input type="checkbox" name="tiposSanguineos" value="AB+"> AB+</label>
+              <label><input type="checkbox" name="tiposSanguineos" value="AB-"> AB-</label>
+              <label><input type="checkbox" name="tiposSanguineos" value="O+"> O+</label>
+              <label><input type="checkbox" name="tiposSanguineos" value="O-"> O-</label>
+            </div>
+            
+            <label for="mensagem">Personalize a mensagem se desejar:</label>
+            <textarea id="mensagem" placeholder="Alerta de escassez de sangue no HEMOCENTRO X. Acesse o formulário para fazer sua doação e contribuição: [LINK]"></textarea>
+
+            <button id="confirmar-envio" class="button">
+                Confirmar envio de SMS
+            </button>
+            <a href="../Login/login.html" class="button">Voltar</a>
+        </div>
+    </div>
+</body>
+</html>
