@@ -101,4 +101,18 @@ public class BloodCenter implements Serializable {
     public void setCep(String cep) {
         this.cep = cep;
     }
+
+    @Override
+    public String toString() {
+        return "BloodCenter{" + "bloodCenterUuid=" + bloodCenterUuid +
+                ", nome=" + nome +
+                ", rua=" + rua +
+                ", numero=" + numero +
+                ", complemento=" + complemento +
+                ", bairro=" + bairro +
+                ", cidade=" + cidade +
+                ", estado=" + estado +
+                ", cep=" + cep +
+                '}';
+    }
 }

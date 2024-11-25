@@ -17,14 +17,13 @@ public class AlertRepository {
     }
 
     public UUID saveAlert(Alert alert) {
-        String sql = "INSERT INTO alerta (id, center_name, city, blood_type, center_uuid) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO alerta (id, ddd, tipo_sanguineo, hemocentro_id) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setObject(1, alert.getId());
-            preparedStatement.setString(2, alert.getCenterName());
-            preparedStatement.setString(3, alert.getCity());
-            preparedStatement.setString(4, alert.getBloodType().name());
-            preparedStatement.setObject(5, alert.getCenterUuid());
+            preparedStatement.setString(2, alert.getCity());
+            preparedStatement.setString(3, alert.getBloodType().getDisplayName());
+            preparedStatement.setObject(4, alert.getCenterUuid());
             preparedStatement.executeUpdate();
             return alert.getId();
         } catch (Exception e) {
@@ -34,7 +33,7 @@ public class AlertRepository {
     }
 
     public Optional<Alert> findById(UUID alertId) {
-        String sql = "SELECT id, center_name, city, blood_type, center_uuid FROM alerta WHERE id = ?";
+        String sql = "SELECT id, ddd, tipo_sanguineo, hemocentro_id FROM alerta WHERE id = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setObject(1, alertId);
@@ -42,10 +41,9 @@ public class AlertRepository {
             if (resultSet.next()) {
                 Alert alert = new Alert(
                         UUID.fromString(resultSet.getString("id")),
-                        resultSet.getString("center_name"),
-                        resultSet.getString("city"),
-                        Enum.valueOf(BloodType.class, resultSet.getString("blood_type")),
-                        UUID.fromString(resultSet.getString("center_uuid"))
+                        resultSet.getString("ddd"),
+                        BloodType.fromDisplayName(resultSet.getString("tipo_sanguineo").trim()),
+                        UUID.fromString(resultSet.getString("hemocentro_id"))
                 );
                 return Optional.of(alert);
             }

@@ -1,9 +1,11 @@
 package com.hemoalert.HemoAlert.dto;
 
 import com.hemoalert.HemoAlert.model.BloodType;
+
+import java.io.Serializable;
 import java.util.UUID;
 
-public class AlertDTO {
+public class AlertDTO implements Serializable {
 
     private UUID alertUuid;
     private String centerName;
@@ -59,5 +61,15 @@ public class AlertDTO {
 
     public void setCenterUuid(UUID centerUuid) {
         this.centerUuid = centerUuid;
+    }
+
+    @Override
+    public String toString() {
+        return "AlertDTO{" + "alertUuid=" + alertUuid +
+                ", centerName=" + centerName +
+                ", city=" + city +
+                ", bloodType=" + bloodType +
+                ", centerUuid=" + centerUuid +
+                '}';
     }
 }

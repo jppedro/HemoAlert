@@ -17,45 +17,14 @@ public class BloodCenterController {
         this.bloodCenterService = bloodCenterService;
     }
 
-    public void handleRequest(Socket clientSocket) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-
-            String requestLine = reader.readLine();
-            if (requestLine == null) return;
-
-            String[] requestParts = requestLine.split(" ");
-            String method = requestParts[0];
-            String path = requestParts[1];
-
-            if (method.equals("POST") && path.equals("/blood-centers")) {
-                handleCreateBloodCenter(reader, writer);
-            } else if (method.equals("GET") && path.startsWith("/blood-centers/")) {
-                handleGetBloodCenter(writer, path);
-            } else {
-                sendResponse(writer, 404, "Not Found");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handleCreateBloodCenter(BufferedReader reader, BufferedWriter writer) throws IOException {
-        StringBuilder bodyBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null && !line.isEmpty()) {
-            bodyBuilder.append(line);
-        }
-
-        BloodCenterDTO bloodCenterDTO = objectMapper.readValue(bodyBuilder.toString(), BloodCenterDTO.class);
+    public void handleCreateBloodCenter(BufferedWriter writer, BloodCenterDTO bloodCenterDTO) throws IOException {
         UUID bloodCenterId = bloodCenterService.createBloodCenter(bloodCenterDTO);
 
         String response = objectMapper.writeValueAsString(new CreateBloodCenterResponse(bloodCenterId, "Blood Center created successfully!"));
         sendResponse(writer, 201, response);
     }
 
-    private void handleGetBloodCenter(BufferedWriter writer, String path) throws IOException {
+    public void handleGetBloodCenter(BufferedWriter writer, String path) throws IOException {
         String[] pathParts = path.split("/");
         if (pathParts.length < 3) {
             sendResponse(writer, 400, "Invalid URL");
@@ -73,12 +42,22 @@ public class BloodCenterController {
     }
 
     private void sendResponse(BufferedWriter writer, int statusCode, String body) throws IOException {
-        writer.write("HTTP/1.1 " + statusCode + " OK\r\n");
+        writer.write("HTTP/1.1 " + statusCode + " " + getStatusMessage(statusCode) + "\r\n");
         writer.write("Content-Type: application/json\r\n");
         writer.write("Content-Length: " + body.length() + "\r\n");
         writer.write("\r\n");
         writer.write(body);
         writer.flush();
+    }
+
+    private String getStatusMessage(int statusCode) {
+        switch (statusCode) {
+            case 200: return "OK";
+            case 201: return "Created";
+            case 400: return "Bad Request";
+            case 404: return "Not Found";
+            default: return "Internal Server Error";
+        }
     }
 }
 

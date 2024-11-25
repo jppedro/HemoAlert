@@ -2,6 +2,8 @@ package com.hemoalert.HemoAlert.server;
 
 import com.hemoalert.HemoAlert.controller.AlertController;
 import com.hemoalert.HemoAlert.controller.BloodCenterController;
+import com.hemoalert.HemoAlert.dto.AlertDTO;
+import com.hemoalert.HemoAlert.dto.BloodCenterDTO;
 import com.hemoalert.HemoAlert.service.AlertService;
 import com.hemoalert.HemoAlert.service.BloodCenterService;
 import com.hemoalert.HemoAlert.repository.AlertRepository;
@@ -42,28 +44,37 @@ public class HttpServer {
     }
 
     private void handleRequest(Socket clientSocket) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        try (ObjectInputStream reader = new ObjectInputStream(clientSocket.getInputStream());
              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
 
-            String requestLine = reader.readLine();
+            Object requestLine = reader.readObject();
             if (requestLine == null) return;
 
-            String[] requestParts = requestLine.split(" ");
-            String method = requestParts[0];
-            String path = requestParts[1];
+            String method, path;
+
+            String request = (String)requestLine;
+            String[] requestParts = request.split(" ");
+            method = requestParts[0];
+            path = requestParts[1];
 
             if (method.equals("POST") && path.equals("/alerts")) {
-                alertController.handleRequest(clientSocket);
+                AlertDTO alertDTO = (AlertDTO) reader.readObject();
+                alertController.handleCreateAlert(writer, alertDTO);
             } else if (method.equals("GET") && path.startsWith("/alerts/")) {
-                alertController.handleRequest(clientSocket);
-            } else if (method.equals("GET") && path.startsWith("/bloodcenters/")) {
-                bloodCenterController.handleRequest(clientSocket);
+                alertController.handleGetAlert(writer, path);
+            } else if (method.equals("GET") && path.startsWith("/blood-centers/")) {
+                bloodCenterController.handleGetBloodCenter(writer, path);
+            } else if (method.equals("POST") && path.equals("/blood-centers")){
+                BloodCenterDTO bloodCenterDTO = (BloodCenterDTO) reader.readObject();
+                bloodCenterController.handleCreateBloodCenter(writer, bloodCenterDTO);
             } else {
                 sendResponse(writer, 404, "Not Found");
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -79,7 +90,7 @@ public class HttpServer {
     private static Connection connectToDatabase() throws SQLException {
         String dbUrl = "jdbc:postgresql://localhost:5432/hemoalert";
         String dbUser = "postgres";
-        String dbPassword = "your_password";
+        String dbPassword = "jp280104";
         return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
@@ -93,11 +104,9 @@ public class HttpServer {
             AlertService alertService = new AlertService(alertRepository);
             BloodCenterService bloodCenterService = new BloodCenterService(bloodCenterRepository);
 
-            // Crie os controladores, passando os serviços
             AlertController alertController = new AlertController(alertService);
             BloodCenterController bloodCenterController = new BloodCenterController(bloodCenterService);
 
-            // Inicie o servidor HTTP
             HttpServer server = new HttpServer(8080, alertController, bloodCenterController);
             server.start();
         } catch (SQLException e) {

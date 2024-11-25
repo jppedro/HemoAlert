@@ -17,45 +17,14 @@ public class AlertController {
         this.alertService = alertService;
     }
 
-    public void handleRequest(Socket clientSocket) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
-
-            String requestLine = reader.readLine();
-            if (requestLine == null) return;
-
-            String[] requestParts = requestLine.split(" ");
-            String method = requestParts[0];
-            String path = requestParts[1];
-
-            if (method.equals("POST") && path.equals("/alerts")) {
-                handleCreateAlert(reader, writer);
-            } else if (method.equals("GET") && path.startsWith("/alerts/")) {
-                handleGetAlert(writer, path);
-            } else {
-                sendResponse(writer, 404, "Not Found");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handleCreateAlert(BufferedReader reader, BufferedWriter writer) throws IOException {
-        StringBuilder bodyBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null && !line.isEmpty()) {
-            bodyBuilder.append(line);
-        }
-
-        AlertDTO alertDTO = objectMapper.readValue(bodyBuilder.toString(), AlertDTO.class);
+    public void handleCreateAlert(BufferedWriter writer, AlertDTO alertDTO) throws IOException {
         UUID alertId = alertService.createAlert(alertDTO);
 
         String response = objectMapper.writeValueAsString(new CreateAlertResponse("Alert created successfully!", alertId));
         sendResponse(writer, 201, response);
     }
 
-    private void handleGetAlert(BufferedWriter writer, String path) throws IOException {
+    public void handleGetAlert(BufferedWriter writer, String path) throws IOException {
         String[] pathParts = path.split("/");
         if (pathParts.length < 3) {
             sendResponse(writer, 400, "Invalid URL");
@@ -66,6 +35,7 @@ public class AlertController {
         try {
             AlertDTO alert = alertService.getAlertById(alertId);
             String response = objectMapper.writeValueAsString(alert);
+            System.out.println(response);
             sendResponse(writer, 200, response);
         } catch (Exception e) {
             sendResponse(writer, 404, e.getMessage());
@@ -73,12 +43,22 @@ public class AlertController {
     }
 
     private void sendResponse(BufferedWriter writer, int statusCode, String body) throws IOException {
-        writer.write("HTTP/1.1 " + statusCode + " OK\r\n");
+        writer.write("HTTP/1.1 " + statusCode + " " + getStatusMessage(statusCode) + "\r\n");
         writer.write("Content-Type: application/json\r\n");
         writer.write("Content-Length: " + body.length() + "\r\n");
         writer.write("\r\n");
         writer.write(body);
         writer.flush();
+    }
+
+    private String getStatusMessage(int statusCode) {
+        switch (statusCode) {
+            case 200: return "OK";
+            case 201: return "Created";
+            case 400: return "Bad Request";
+            case 404: return "Not Found";
+            default: return "Internal Server Error";
+        }
     }
 }
 

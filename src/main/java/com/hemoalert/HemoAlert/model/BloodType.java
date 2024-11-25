@@ -22,7 +22,7 @@ public enum BloodType {
 
     public static BloodType fromDisplayName(String displayName) {
         for (BloodType type : values()) {
-            if (type.displayName.equalsIgnoreCase(displayName)) {
+            if (type.getDisplayName().equalsIgnoreCase(displayName)) {
                 return type;
             }
         }

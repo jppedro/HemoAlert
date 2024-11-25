@@ -15,13 +15,7 @@ public class AlertService {
     }
 
     public UUID createAlert(AlertDTO alertDTO) {
-        Alert alert = new Alert(
-                UUID.randomUUID(),
-                alertDTO.getCenterName(),
-                alertDTO.getCity(),
-                alertDTO.getBloodType(),
-                alertDTO.getCenterUuid()
-        );
+        Alert alert = Alert.of(alertDTO);
         return alertRepository.saveAlert(alert);
     }
 

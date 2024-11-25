@@ -1,8 +1,9 @@
 package com.hemoalert.HemoAlert.dto;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class BloodCenterDTO {
+public class BloodCenterDTO implements Serializable  {
 
     private UUID bloodCenterUuid;
     private String nome;
@@ -99,5 +100,19 @@ public class BloodCenterDTO {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    @Override
+    public String toString() {
+        return "BloodCenter{" + "bloodCenterUuid=" + bloodCenterUuid +
+                ", nome=" + nome +
+                ", rua=" + rua +
+                ", numero=" + numero +
+                ", complemento=" + complemento +
+                ", bairro=" + bairro +
+                ", cidade=" + cidade +
+                ", estado=" + estado +
+                ", cep=" + cep +
+                '}';
     }
 }

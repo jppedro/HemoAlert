@@ -16,7 +16,7 @@ public class BloodCenterRepository {
     }
 
     public UUID saveBloodCenter(BloodCenter bloodCenter) {
-        String sql = "INSERT INTO blood_centers (id, nome, rua, numero, complemento, bairro, cidade, estado, cep) " +
+        String sql = "INSERT INTO hemocentro (id, nome, rua, numero, complemento, bairro, cidade, estado, cep) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -39,7 +39,7 @@ public class BloodCenterRepository {
 
     public Optional<BloodCenter> findById(UUID bloodCenterId) {
         String sql = "SELECT id, nome, rua, numero, complemento, bairro, cidade, estado, cep " +
-                "FROM blood_centers WHERE id = ?";
+                "FROM hemocentro WHERE id = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setObject(1, bloodCenterId);
