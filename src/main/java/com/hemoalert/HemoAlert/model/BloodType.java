@@ -19,4 +19,13 @@ public enum BloodType {
     public String getDisplayName() {
         return displayName;
     }
+
+    public static BloodType fromDisplayName(String displayName) {
+        for (BloodType type : values()) {
+            if (type.getDisplayName().equalsIgnoreCase(displayName)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Invalid blood type: " + displayName);
+    }
 }

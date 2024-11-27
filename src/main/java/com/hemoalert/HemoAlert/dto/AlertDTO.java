@@ -1,11 +1,11 @@
-package com.hemoalert.HemoAlert.model;
+package com.hemoalert.HemoAlert.dto;
 
-import com.hemoalert.HemoAlert.dto.AlertDTO;
+import com.hemoalert.HemoAlert.model.BloodType;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-public class Alert implements Serializable {
+public class AlertDTO implements Serializable {
 
     private UUID alertUuid;
     private String centerName;
@@ -13,9 +13,9 @@ public class Alert implements Serializable {
     private BloodType bloodType;
     private UUID centerUuid;
 
-    public Alert() {}
+    public AlertDTO() {}
 
-    public Alert(final UUID alertUuid, final String centerName, final String city, final BloodType bloodType, final UUID centerUuid) {
+    public AlertDTO(UUID alertUuid, String centerName, String city, BloodType bloodType, UUID centerUuid) {
         this.alertUuid = alertUuid;
         this.centerName = centerName;
         this.city = city;
@@ -23,25 +23,12 @@ public class Alert implements Serializable {
         this.centerUuid = centerUuid;
     }
 
-    public Alert(final UUID alertUuid, final String city, final BloodType bloodType, final UUID centerUuid) {
-        this.alertUuid = alertUuid;
-        this.city = city;
-        this.bloodType = bloodType;
-        this.centerUuid = centerUuid;
-    }
-
-    public static Alert of(AlertDTO alertDTO) {
-        return new Alert(
-                alertDTO.getAlertUuid(),
-                alertDTO.getCenterName(),
-                alertDTO.getCity(),
-                alertDTO.getBloodType(),
-                alertDTO.getCenterUuid()
-        );
-    }
-
-    public UUID getId() {
+    public UUID getAlertUuid() {
         return alertUuid;
+    }
+
+    public void setAlertUuid(UUID alertUuid) {
+        this.alertUuid = alertUuid;
     }
 
     public String getCenterName() {
@@ -78,9 +65,9 @@ public class Alert implements Serializable {
 
     @Override
     public String toString() {
-        return "Alert{" +
-                "alertUuid=" + alertUuid +
-                ", city='" + city + '\'' +
+        return "AlertDTO{" + "alertUuid=" + alertUuid +
+                ", centerName=" + centerName +
+                ", city=" + city +
                 ", bloodType=" + bloodType +
                 ", centerUuid=" + centerUuid +
                 '}';
