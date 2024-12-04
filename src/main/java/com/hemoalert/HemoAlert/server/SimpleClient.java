@@ -14,52 +14,72 @@ public class SimpleClient {
         String hostname = "localhost";
         int port = 8080;
 
-        try {
-            Socket connection = new Socket(hostname, port);
+        try (Socket connection = new Socket(hostname, port);
+             ObjectOutputStream transmissor = new ObjectOutputStream(connection.getOutputStream());
+             BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
+             BufferedReader servidorResposta = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
 
-            ObjectOutputStream transmissor = new ObjectOutputStream(connection.getOutputStream());
-            BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
+            connection.setSoTimeout(30000);
 
-            Alert alertaCampinas = new Alert(UUID.randomUUID(), "HC-CAMPINAS", "19", BloodType.A_NEGATIVE, UUID.fromString("23502070-2213-42c4-8ecc-d43699fb1b2b"));
+            String responseLine;
 
-            BloodCenterDTO bloodCenterDTO = new BloodCenterDTO(UUID.randomUUID(), "Hemocentro Campinas", "Rua Perto de La", "100", "Hemocentro", "Parque dos Testes", "Campinas", "SP", "12000000");
-            System.out.print("Pressione ENTER para buscar o hemocentro DTO...");
+            /*AlertDTO alertDTO = new AlertDTO(UUID.randomUUID(), "HC-PUCSP", "11", BloodType.O_NEGATIVE, UUID.fromString("2764fed1-7b01-4a89-a4c1-c654699bcb22"));
+
+            System.out.print("Pressione ENTER para criar um alerta...");
             teclado.readLine();
-            transmissor.writeObject("GET /blood-centers/903fd59d-7302-42df-8f88-a3d113a82083");
-            transmissor.flush();
+            if(connection.isConnected()){
+                transmissor.writeObject("POST /alerts");
+                transmissor.writeObject(alertDTO);
+                transmissor.flush();
+                while ((responseLine = servidorResposta.readLine()) != null) {
+                    System.out.println("Servidor: " + responseLine);
+                }
+            }
 
-            AlertDTO alertDTO = new AlertDTO(UUID.randomUUID(), "HC-CAMPINAS", "19", BloodType.AB_NEGATIVE, UUID.fromString("23502070-2213-42c4-8ecc-d43699fb1b2b"));
-
-            /*System.out.print("Pressione ENTER para fazer uma requisicao...");
+            /*System.out.print("Pressione ENTER para buscar o alerta com uuid b5206890-da82-4221-99b7-3acfd5d6a941...");
             teclado.readLine();
-            transmissor.writeObject("GET /alerts/d425676a-ab34-4673-92cd-119521ac6bee");
-            transmissor.writeObject(alertDTO);
-            transmissor.flush();*/
+            if(connection.isConnected()){
+                transmissor.writeObject("GET /alerts/b5206890-da82-4221-99b7-3acfd5d6a941");
+                transmissor.flush();
+                while ((responseLine = servidorResposta.readLine()) != null) {
+                    System.out.println("Servidor: " + responseLine);
+                }
+            }*/
 
-            /*System.out.print("Pressione ENTER para enviar o primeiro alerta...");
-            teclado.readLine();
-            transmissor.writeObject(alertaCampinas);
-            transmissor.flush();
+            BloodCenterDTO bloodCenterDTO = new BloodCenterDTO(UUID.randomUUID(), "HC-PUCSP", "Rua PUC São Paulo", "200", "Hemocentro", "Parque Ibirapuera", "São Paulo", "SP", "13111000");
 
-            System.out.print("Pressione ENTER para enviar o segundo alerta...");
+            System.out.print("Pressione ENTER para criar um hemocentro...");
             teclado.readLine();
-            transmissor.writeObject(alertaSP);
-            transmissor.flush();
+            if(connection.isConnected()) {
+                transmissor.writeObject("POST /blood-centers");
+                transmissor.writeObject(bloodCenterDTO);
+                transmissor.flush();
+                while ((responseLine = servidorResposta.readLine()) != null) {
+                    System.out.println("Servidor: " + responseLine);
+                }
+            }
 
-            System.out.print("Pressione ENTER para enviar o terceiro alerta...");
+            /*System.out.print("Pressione ENTER para buscar o hemocentro DTO...");
             teclado.readLine();
-            transmissor.writeObject(alertaRio);
-            transmissor.flush();*/
+            if(connection.isConnected()) {
+                transmissor.writeObject("GET /blood-centers/d3a1a69d-800b-42aa-a228-40688a471e7a");
+                transmissor.flush();
+                while ((responseLine = servidorResposta.readLine()) != null) {
+                    System.out.println("Servidor: " + responseLine);
+                }
+            }*/
 
             System.out.print ("Pressione ENTER para terminar o programa");
             teclado.readLine ();
             transmissor.writeObject ("FIM");
             transmissor.flush();
 
-            transmissor.close();
             connection.close();
-            } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            transmissor.close();
+        } catch (IOException e) {
+            System.out.println("Erro de IO: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
             e.printStackTrace();
         }
     }

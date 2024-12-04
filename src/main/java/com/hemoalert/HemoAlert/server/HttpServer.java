@@ -15,16 +15,20 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HttpServer {
     private final int port;
     private final AlertController alertController;
     private final BloodCenterController bloodCenterController;
+    private final ExecutorService threadPool;
 
     public HttpServer(final int port, AlertController alertController, BloodCenterController bloodCenterController) {
         this.port = port;
         this.alertController = alertController;
         this.bloodCenterController = bloodCenterController;
+        this.threadPool = Executors.newCachedThreadPool();
     }
 
     public void start() {
@@ -34,7 +38,8 @@ public class HttpServer {
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                new Thread(() -> handleRequest(clientSocket)).start();
+                clientSocket.setSoTimeout(60000);
+                threadPool.execute(() -> handleRequest(clientSocket));
             }
 
         } catch (IOException e) {
@@ -67,14 +72,19 @@ public class HttpServer {
             } else if (method.equals("POST") && path.equals("/blood-centers")){
                 BloodCenterDTO bloodCenterDTO = (BloodCenterDTO) reader.readObject();
                 bloodCenterController.handleCreateBloodCenter(writer, bloodCenterDTO);
-            } else {
+            } else if (method.equals("FIM")){
+                clientSocket.close();
                 sendResponse(writer, 404, "Not Found");
             }
 
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } finally {
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -90,7 +100,7 @@ public class HttpServer {
     private static Connection connectToDatabase() throws SQLException {
         String dbUrl = "jdbc:postgresql://localhost:5432/hemoalert";
         String dbUser = "postgres";
-        String dbPassword = "jp280104";
+        String dbPassword = "joao";
         return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
